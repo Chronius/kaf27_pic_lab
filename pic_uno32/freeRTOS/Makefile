@@ -12,7 +12,6 @@ SOURCE_DIR:=./src
 ASRC=	$(SOURCE_DIR)/portable/PIC32MX/port_asm.S
 SRC = 	$(SOURCE_DIR)/portable/PIC32MX/port.c \
 	main.c \
-	ConfigPerformance.c \
 	$(wildcard ./src/*.c)
 
 OBJ = $(SRC:.c=.o) $(ASRC:.S=.o)
@@ -44,3 +43,7 @@ blinky.hex: blinky.elf
 flash: blinky.hex
 	./serial_reset.sh $(PORT)
 	avrdude -C avrdude.pic32.conf -c stk500v2 -p $(MCU) -P $(PORT) -b 115200 -U flash:w:$(<)
+
+update_rom: 
+	./serial_reset.sh $(PORT)
+	avrdude -C avrdude.pic32.conf -c stk500v2 -p $(MCU) -P $(PORT) -b 115200 -U flash:w:blinky.hex

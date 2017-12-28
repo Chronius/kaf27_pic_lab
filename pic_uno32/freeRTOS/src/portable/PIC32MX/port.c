@@ -252,6 +252,7 @@ extern void *pxCurrentTCB;
 	#endif /* configCHECK_FOR_STACK_OVERFLOW > 2 */
 
 	/* Clear the software interrupt flag. */
+	tx_str("Clear interrupt\n");
 	IFS0CLR = _IFS0_CS0IF_MASK;
 
 	/* Set software timer priority. */
@@ -264,17 +265,21 @@ extern void *pxCurrentTCB;
 
 	/* Setup the timer to generate the tick.  Interrupts will have been
 	disabled by the time we get here. */
+	
+	tx_str("vApplicationSetupTickTimerInterrupt\n");
 	vApplicationSetupTickTimerInterrupt();
-
+	
 	/* Kick off the highest priority task that has been created so far.
 	Its stack location is loaded into uxSavedTaskStackPointer. */
 	uxSavedTaskStackPointer = *( UBaseType_t * ) pxCurrentTCB;
+	tx_str("vPortStartFirstTask\n");
 	vPortStartFirstTask();
 
 	/* Should never get here as the tasks will now be executing!  Call the task
 	exit error function to prevent compiler warnings about a static function
 	not being called in the case that the application writer overrides this
 	functionality by defining configTASK_RETURN_ADDRESS. */
+	tx_str("prvTaskExitError\n");
 	prvTaskExitError();
 
 	return pdFALSE;
